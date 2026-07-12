@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DEMİR PROGRAM — Haftalık Antrenman Takibi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-base:#131419;
+    --bg-surface:#1c1e26;
+    --bg-surface-2:#252833;
+    --bg-surface-3:#2f333f;
+    --line:#33374233;
+    --line-strong:#3a3f4c;
+    --text-hi:#f4f2ec;
+    --text-mid:#b7b9c4;
+    --text-low:#787c8a;
+    --iron:#ff5a36;
+    --iron-dim:#ff5a3622;
+    --plate-gold:#ffc145;
+    --ok:#5fd6a0;
+    --radius-card:10px;
+    --font-display:'Anton', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'Roboto Mono', monospace;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, #23262f 0%, transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, #1c1f28 0%, transparent 55%),
+      var(--bg-base);
+    color:var(--text-hi);
+    font-family:var(--font-body);
+    min-height:100vh;
+    padding-bottom:64px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  a{color:inherit;}
+  button{font-family:inherit; cursor:pointer;}
+
+  ::selection{background:var(--iron); color:#131419;}
+
+  /* ---------- Layout shells ---------- */
+  .wrap{max-width:900px; margin:0 auto; padding:0 20px;}
+
+  /* ---------- Header ---------- */
+  header.hero{
+    padding:36px 0 28px;
+    border-bottom:1px solid var(--line-strong);
+    position:relative;
+    overflow:hidden;
+  }
+  header.hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:repeating-linear-gradient(135deg, #ffffff05 0 2px, transparent 2px 14px);
+    pointer-events:none;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:0.28em;
+    color:var(--iron);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px; height:2px; background:var(--iron); display:inline-block;
+  }
+  h1.title{
+    font-family:var(--font-display);
+    font-weight:400;
+    font-size:clamp(38px, 8vw, 64px);
+    letter-spacing:0.01em;
+    line-height:0.95;
+    color:var(--text-hi);
+    text-transform:uppercase;
+    -webkit-text-stroke:0.5px #ffffff10;
+  }
+  h1.title span{color:var(--iron);}
+  .subtitle{
+    margin-top:12px;
+    max-width:52ch;
+    color:var(--text-mid);
+    font-size:15px;
+    line-height:1.55;
+  }
+
+  /* week snapshot strip */
+  .week-meta{
+    margin-top:22px;
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--text-low);
+  }
+  .week-meta b{color:var(--text-hi); font-weight:700;}
+
+  /* ---------- Barbell day selector (signature element) ---------- */
+  .barbell-section{
+    padding:34px 0 8px;
+  }
+  .barbell-label{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--text-low);
+    margin-bottom:18px;
+  }
+  .barbell{
+    position:relative;
+    display:flex;
+    align-items:flex-end;
+    height:118px;
+    padding:0 4px;
+  }
+  .bar-rod{
+    position:absolute;
+    left:0; right:0; top:50%;
+    height:6px;
+    transform:translateY(-50%);
+    background:linear-gradient(180deg,#4a4e5a,#23252d 60%, #17181d);
+    border-radius:3px;
+    box-shadow:inset 0 1px 0 #ffffff22, 0 2px 6px #00000060;
+  }
+  .bar-sleeve-cap{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:10px; height:26px;
+    background:linear-gradient(180deg,#5a5e6a,#1c1e24);
+    border-radius:2px;
+  }
+  .bar-sleeve-cap.left{left:-6px;}
+  .bar-sleeve-cap.right{right:-6px;}
+
+  .plates-row{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(7, 1fr);
+    gap:6px;
+    width:100%;
+    z-index:2;
+  }
+  .plate-btn{
+    background:none;
+    border:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-end;
+    gap:8px;
+    height:118px;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .plate{
+    border-radius:50%;
+    border:3px solid #454956;
+    background:radial-gradient(circle at 35% 30%, #3a3e49, #1d1f26 70%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--font-mono);
+    font-weight:700;
+    color:var(--text-low);
+    transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease, color .22s ease;
+    position:relative;
+  }
+  .plate::after{
+    content:"";
+    position:absolute; inset:7px;
+    border-radius:50%;
+    border:1px solid #ffffff0f;
+  }
+  /* size = training load emphasis for that weekday */
+  .plate-btn[data-size="xl"] .plate{width:78px; height:78px; font-size:15px;}
+  .plate-btn[data-size="lg"] .plate{width:66px; height:66px; font-size:13px;}
+  .plate-btn[data-size="md"] .plate{width:56px; height:56px; font-size:12px;}
+  .plate-btn[data-size="sm"] .plate{width:44px; height:44px; font-size:11px;}
+
+  .plate-btn:hover .plate{border-color:#5b6072; transform:translateY(-3px);}
+
+  .plate-btn.active .plate{
+    border-color:var(--iron);
+    background:radial-gradient(circle at 35% 30%, #402a22, #201513 70%);
+    color:var(--plate-gold);
+    box-shadow:0 0 0 3px var(--iron-dim), 0 8px 18px -6px #ff5a3670;
+    transform:translateY(-8px);
+  }
+  .plate-btn.rest .plate{border-style:dashed; opacity:.65;}
+  .plate-btn.active.rest .plate{border-color:var(--text-low); box-shadow:none; background:radial-gradient(circle at 35% 30%, #2a2c33, #1d1f26 70%); color:var(--text-mid);}
+
+  .plate-day-label{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:.06em;
+    color:var(--text-low);
+    text-transform:uppercase;
+    transition:color .2s ease;
+  }
+  .plate-btn.active .plate-day-label{color:var(--text-hi); font-weight:700;}
+
+  /* ---------- Day panel ---------- */
+  .day-panel{
+    margin-top:34px;
+  }
+  .day-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:14px;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--line-strong);
+    margin-bottom:22px;
+  }
+  .day-head h2{
+    font-family:var(--font-display);
+    font-weight:400;
+    text-transform:uppercase;
+    font-size:clamp(26px,5vw,36px);
+    letter-spacing:.01em;
+  }
+  .day-head h2 .muted{color:var(--text-low); font-size:.55em; display:block; font-family:var(--font-mono); letter-spacing:.15em; margin-top:6px; text-transform:uppercase;}
+
+  .progress-wrap{min-width:180px;}
+  .progress-num{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--text-mid);
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+  }
+  .progress-track{
+    height:6px;
+    background:var(--bg-surface-2);
+    border-radius:4px;
+    overflow:hidden;
+    border:1px solid var(--line-strong);
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--iron), var(--plate-gold));
+    width:0%;
+    transition:width .35s ease;
+  }
+
+  .rest-note{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--text-mid);
+    background:var(--bg-surface);
+    border:1px dashed var(--line-strong);
+    border-radius:var(--radius-card);
+    padding:20px;
+    line-height:1.7;
+  }
+  .rest-note b{color:var(--text-hi);}
+
+  /* ---------- Blocks / cards ---------- */
+  .block{margin-bottom:20px;}
+
+  .exercise-card{
+    background:var(--bg-surface);
+    border:1px solid var(--line-strong);
+    border-radius:var(--radius-card);
+    padding:16px 18px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .ex-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .ex-name{
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:.01em;
+  }
+  .ex-name small{
+    display:block;
+    font-family:var(--font-mono);
+    font-weight:400;
+    font-size:11.5px;
+    color:var(--text-low);
+    margin-top:3px;
+    letter-spacing:.02em;
+  }
+  .ex-stat{
+    font-family:var(--font-mono);
+    font-weight:700;
+    font-size:14px;
+    color:var(--plate-gold);
+    background:#00000030;
+    border:1px solid var(--line-strong);
+    padding:5px 10px;
+    border-radius:6px;
+    white-space:nowrap;
+  }
+
+  .set-dots{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .set-dot{
+    width:26px; height:26px;
+    border-radius:50%;
+    border:2px solid var(--line-strong);
+    background:transparent;
+    color:var(--text-low);
+    font-family:var(--font-mono);
+    font-size:11px;
+    display:flex; align-items:center; justify-content:center;
+    transition:all .18s ease;
+  }
+  .set-dot:hover{border-color:var(--text-mid);}
+  .set-dot.done{
+    background:var(--ok);
+    border-color:var(--ok);
+    color:#0e1512;
+    font-weight:700;
+  }
+
+  /* ---------- Superset grouping ---------- */
+  .superset-group{
+    position:relative;
+    border:1px solid var(--iron);
+    border-radius:14px;
+    padding:16px 16px 16px 22px;
+    background:linear-gradient(180deg, #23150f10, transparent 30%);
+  }
+  .superset-group::before{
+    content:"";
+    position:absolute;
+    left:8px; top:20px; bottom:20px;
+    width:3px;
+    background:repeating-linear-gradient(180deg, var(--iron) 0 8px, transparent 8px 13px);
+    border-radius:2px;
+  }
+  .superset-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-family:var(--font-mono);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#161207;
+    background:var(--iron);
+    padding:5px 10px 5px 8px;
+    border-radius:5px;
+    margin-bottom:12px;
+  }
+  .superset-tag::before{content:"⚡";}
+  .superset-group .exercise-card{
+    border-color:var(--line-strong);
+    background:var(--bg-surface-2);
+  }
+  .superset-group .exercise-card + .exercise-card{margin-top:0;}
+  .superset-list{display:flex; flex-direction:column; gap:10px;}
+
+  .no-rest-chip{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    color:var(--iron);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    padding:2px 0 2px 2px;
+  }
+  .no-rest-chip .dash{flex:1; height:1px; background:repeating-linear-gradient(90deg, var(--iron) 0 5px, transparent 5px 9px);}
+
+  /* ---------- Footer ---------- */
+  footer{
+    margin-top:60px;
+    padding-top:22px;
+    border-top:1px solid var(--line-strong);
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--text-low);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  footer button{
+    background:none;
+    border:1px solid var(--line-strong);
+    color:var(--text-low);
+    font-family:var(--font-mono);
+    font-size:11px;
+    padding:6px 12px;
+    border-radius:6px;
+    transition:all .18s ease;
+  }
+  footer button:hover{border-color:var(--iron); color:var(--iron);}
+
+  /* small screens */
+  @media (max-width:560px){
+    .wrap{padding:0 14px;}
+    .plates-row{gap:3px;}
+    .plate-btn[data-size="xl"] .plate{width:44px;height:44px;font-size:10px;}
+    .plate-btn[data-size="lg"] .plate{width:40px;height:40px;font-size:9.5px;}
+    .plate-btn[data-size="md"] .plate{width:36px;height:36px;font-size:9px;}
+    .plate-btn[data-size="sm"] .plate{width:30px;height:30px;font-size:8px;}
+    .plate-day-label{font-size:9px;}
+    .barbell{height:92px;}
+    .plate-btn{height:92px;}
+    .day-head{align-items:flex-start;}
+    .ex-top{flex-direction:column;}
+    .ex-stat{align-self:flex-start;}
+  }
+
+  :focus-visible{outline:2px solid var(--iron); outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">Haftalık Program · Vücut Geliştirme</div>
+    <h1 class="title">DEMİR<span>.</span>PROGRAM</h1>
+    <p class="subtitle">7 günlük hipertrofi odaklı bölünme. Her harekete dokun, seti işaretle, günü bitir. Süper setler yan yana ve dinlenmesiz yapılır — aralarında bar bırakma.</p>
+    <div class="week-meta">
+      <span>ANTRENMAN GÜNÜ: <b id="meta-training-days">6/7</b></span>
+      <span>ODAK: <b>Hipertrofi</b></span>
+      <span>BÖLÜNME: <b>Bro Split</b></span>
+    </div>
+  </header>
+
+  <section class="barbell-section">
+    <div class="barbell-label">// Günü seç — bar üzerinden yükü seç</div>
+    <div class="barbell">
+      <div class="bar-rod"></div>
+      <div class="bar-sleeve-cap left"></div>
+      <div class="bar-sleeve-cap right"></div>
+      <div class="plates-row" id="plateRow"></div>
+    </div>
+  </section>
+
+  <section class="day-panel" id="dayPanel">
+    <!-- injected by JS -->
+  </section>
+
+  <footer>
+    <span>DEMİR PROGRAM — kişisel takip. İlerlemen bu tarayıcıda saklanır.</span>
+    <button id="resetBtn" type="button">Bu günü sıfırla</button>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+
+  /* ---------------------------------------------------------
+     1. PROGRAM VERİSİ
+     block.type = 'single' | 'superset'
+  --------------------------------------------------------- */
+  const PROGRAM = [
+    {
+      id:'pzt', name:'Pazartesi', title:'Göğüs & Arka Kol', size:'xl', rest:false,
+      blocks:[
+        {type:'single', exercises:[
+          {id:'pzt-1', name:'Bench Press', note:'Düz Barbell', sets:4, reps:'6-8'}
+        ]},
+        {type:'single', exercises:[
+          {id:'pzt-2', name:'Eğimli Dambıl Press', note:'30° bank', sets:4, reps:'8-10'}
+        ]},
+        {type:'single', exercises:[
+          {id:'pzt-2b', name:'Smith Machine Düşük Eğimli Press', note:'15° bank, Smith', sets:3, reps:'8-10'}
+        ]},
+        {type:'single', exercises:[
+          {id:'pzt-2c', name:'Pec Deck (Kelebek)', note:'Makine, sıkıştırma odaklı', sets:3, reps:'12-15'}
+        ]},
+        {type:'superset', exercises:[
+          {id:'pzt-3', name:'Cable Crossover', note:'Alttan çekiş', sets:3, reps:'12-15'},
+          {id:'pzt-4', name:'Dips', note:'Vücut ağırlığı', sets:3, reps:'Maks.'}
+        ]},
+        {type:'single', exercises:[
+          {id:'pzt-4b', name:'Incline Push-up', note:'Bench kenarı, vücut ağırlığı', sets:2, reps:'Maks.'}
+        ]},
+        {type:'single', exercises:[
+          {id:'pzt-5', name:'Skull Crusher', note:'EZ Bar', sets:3, reps:'10-12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'pzt-5b', name:'Close-Grip Bench Press', note:'Dar tutuş, barbell', sets:3, reps:'8-10'}
+        ]},
+        {type:'superset', exercises:[
+          {id:'pzt-6', name:'Triceps Pushdown', note:'İp aparat', sets:3, reps:'12-15'},
+          {id:'pzt-7', name:'Overhead Triceps Extension', note:'Tek dambıl', sets:3, reps:'12-15'}
+        ]},
+        {type:'single', exercises:[
+          {id:'pzt-7b', name:'Bench Dip', note:'İki sandalye arası, vücut ağırlığı', sets:2, reps:'Maks.'}
+        ]}
+      ]
+    },
+    {
+      id:'sal', name:'Salı', title:'Sırt & Ön Kol', size:'lg', rest:false,
+      blocks:[
+        {type:'single', exercises:[
+          {id:'sal-1', name:'Deadlift', note:'Klasik stil', sets:4, reps:'5-6'}
+        ]},
+        {type:'single', exercises:[
+          {id:'sal-2', name:'Lat Pulldown', note:'Geniş tutuş', sets:4, reps:'10-12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'sal-2b', name:'Pull-up', note:'Vücut ağırlığı, geniş tutuş', sets:3, reps:'Maks.'}
+        ]},
+        {type:'single', exercises:[
+          {id:'sal-3', name:'Barbell Row', note:'Eğik gövde', sets:4, reps:'8-10'}
+        ]},
+        {type:'single', exercises:[
+          {id:'sal-3b', name:'Tek Kol Dambıl Row', note:'Bench destekli', sets:3, reps:'10-12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'sal-3c', name:'Seated Cable Row', note:'V-tutamaç, kablo', sets:3, reps:'10-12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'sal-3d', name:'Straight-Arm Pulldown', note:'İp aparat, kablo', sets:3, reps:'12-15'}
+        ]},
+        {type:'superset', exercises:[
+          {id:'sal-4', name:'Barbell Curl', note:'Düz bar', sets:3, reps:'10-12'},
+          {id:'sal-5', name:'Hammer Curl', note:'Dambıl, nötr tutuş', sets:3, reps:'10-12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'sal-5b', name:'Incline Dambıl Curl', note:'45° bank, tam açılım', sets:3, reps:'10-12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'sal-6', name:'Face Pull', note:'İp, kablo', sets:3, reps:'15'}
+        ]},
+        {type:'single', exercises:[
+          {id:'sal-6b', name:'Shrug', note:'Barbell veya dambıl, trapez', sets:3, reps:'12-15'}
+        ]}
+      ]
+    },
+    {
+      id:'car', name:'Çarşamba', title:'Bacak Günü', size:'xl', rest:false,
+      blocks:[
+        {type:'single', exercises:[
+          {id:'car-1', name:'Squat', note:'Barbell Back Squat', sets:5, reps:'5-8'}
+        ]},
+        {type:'single', exercises:[
+          {id:'car-1b', name:'Bulgar Split Squat', note:'Dambıl, arka ayak yükseltili', sets:3, reps:'10-12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'car-2', name:'Leg Press', note:'45° platform', sets:4, reps:'10-12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'car-2b', name:'Hack Squat', note:'Makine', sets:3, reps:'10-12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'car-3', name:'Romanian Deadlift', note:'Barbell, hafif diz kırığı', sets:4, reps:'8-10'}
+        ]},
+        {type:'single', exercises:[
+          {id:'car-3b', name:'Walking Lunge', note:'Dambıl ile, yürüyerek', sets:3, reps:'12 adım/bacak'}
+        ]},
+        {type:'superset', exercises:[
+          {id:'car-4', name:'Leg Extension', note:'Makine', sets:3, reps:'15'},
+          {id:'car-5', name:'Leg Curl', note:'Yatarak makine', sets:3, reps:'15'}
+        ]},
+        {type:'single', exercises:[
+          {id:'car-5b', name:'Hip Thrust', note:'Barbell, bench destekli', sets:3, reps:'10-12'}
+        ]},
+        {type:'superset', exercises:[
+          {id:'car-6', name:'Calf Raise', note:'Ayakta, makine', sets:4, reps:'15-20'},
+          {id:'car-6b', name:'Oturarak Calf Raise', note:'Makine, soleus odaklı', sets:3, reps:'15-20'}
+        ]}
+      ]
+    },
+    {
+      id:'per', name:'Perşembe', title:'Omuz & Karın', size:'md', rest:false,
+      blocks:[
+        {type:'single', exercises:[
+          {id:'per-1', name:'Overhead Press', note:'Barbell, ayakta', sets:4, reps:'6-8'}
+        ]},
+        {type:'single', exercises:[
+          {id:'per-1b', name:'Dambıl Shoulder Press', note:'Oturarak', sets:3, reps:'8-10'}
+        ]},
+        {type:'superset', exercises:[
+          {id:'per-2', name:'Yan Lateral Raise', note:'Dambıl', sets:3, reps:'12-15'},
+          {id:'per-3', name:'Ön Lateral Raise', note:'Dambıl ya da plaka', sets:3, reps:'12-15'}
+        ]},
+        {type:'single', exercises:[
+          {id:'per-3b', name:'Kablo Lateral Raise', note:'Tek kol, alt makara', sets:3, reps:'12-15'}
+        ]},
+        {type:'single', exercises:[
+          {id:'per-4', name:'Arnold Press', note:'Dambıl', sets:3, reps:'10'}
+        ]},
+        {type:'single', exercises:[
+          {id:'per-4b', name:'Upright Row', note:'Barbell veya kablo', sets:3, reps:'10-12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'per-5', name:'Rear Delt Fly', note:'Makine ya da dambıl', sets:3, reps:'15'}
+        ]},
+        {type:'single', exercises:[
+          {id:'per-5b', name:'Face Pull', note:'İp, kablo, üst arka omuz', sets:3, reps:'15'}
+        ]},
+        {type:'superset', exercises:[
+          {id:'per-6', name:'Mekik', note:'Crunch', sets:3, reps:'20'},
+          {id:'per-7', name:'Plank', note:'İzometrik, 60 sn', sets:3, reps:'60 sn'}
+        ]},
+        {type:'superset', exercises:[
+          {id:'per-7b', name:'Bicycle Crunch', note:'Vücut ağırlığı', sets:3, reps:'20'},
+          {id:'per-7c', name:'Hanging Knee Raise', note:'Barfikste, asılı', sets:3, reps:'12-15'}
+        ]}
+      ]
+    },
+    {
+      id:'cum', name:'Cuma', title:'Kol Günü', size:'md', rest:false,
+      blocks:[
+        {type:'superset', exercises:[
+          {id:'cum-1', name:'Close-Grip Bench Press', note:'Dar tutuş', sets:4, reps:'8-10'},
+          {id:'cum-2', name:'Diamond Push-up', note:'Vücut ağırlığı', sets:4, reps:'Maks.'}
+        ]},
+        {type:'single', exercises:[
+          {id:'cum-2b', name:'Dips', note:'Paralel bar, gövde öne eğik', sets:3, reps:'Maks.'}
+        ]},
+        {type:'single', exercises:[
+          {id:'cum-3', name:'Preacher Curl', note:'Scott bankı', sets:4, reps:'10-12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'cum-3b', name:'Zottman Curl', note:'Dambıl, üstte pronasyon', sets:3, reps:'10-12'}
+        ]},
+        {type:'superset', exercises:[
+          {id:'cum-4', name:'Rope Pushdown', note:'Kablo', sets:3, reps:'12-15'},
+          {id:'cum-5', name:'Cable Curl', note:'Düz bar aparat', sets:3, reps:'12-15'}
+        ]},
+        {type:'single', exercises:[
+          {id:'cum-5b', name:'Overhead Cable Extension', note:'İp, kablo, iki kol', sets:3, reps:'12-15'}
+        ]},
+        {type:'single', exercises:[
+          {id:'cum-6', name:'Concentration Curl', note:'Tek taraf, dambıl', sets:3, reps:'12'}
+        ]},
+        {type:'single', exercises:[
+          {id:'cum-6b', name:'21s Bicep Curl', note:'EZ bar, kısmi tekrar tekniği', sets:2, reps:'21'}
+        ]},
+        {type:'single', exercises:[
+          {id:'cum-7', name:'Triceps Kickback', note:'Dambıl, eğik gövde', sets:3, reps:'15'}
+        ]},
+        {type:'single', exercises:[
+          {id:'cum-7b', name:'Bilek Curl', note:'Barbell, ön kol, oturarak', sets:2, reps:'15-20'}
+        ]}
+      ]
+    },
+    {
+      id:'cmt', name:'Cumartesi', title:'Kardiyo & Karın', size:'sm', rest:false,
+      blocks:[
+        {type:'single', exercises:[
+          {id:'cmt-1', name:'Koşu Bandı', note:'Hafif tempo', sets:1, reps:'20-30 dk'}
+        ]},
+        {type:'single', exercises:[
+          {id:'cmt-1b', name:'Bisiklet (Sabit)', note:'Orta tempo, alternatif', sets:1, reps:'15-20 dk'}
+        ]},
+        {type:'superset', exercises:[
+          {id:'cmt-2', name:'Russian Twist', note:'Plaka ile', sets:3, reps:'20'},
+          {id:'cmt-3', name:'Leg Raise', note:'Yerde ya da asılı', sets:3, reps:'15'}
+        ]},
+        {type:'single', exercises:[
+          {id:'cmt-4', name:'Cable Woodchopper', note:'Her iki taraf', sets:3, reps:'12'}
+        ]},
+        {type:'superset', exercises:[
+          {id:'cmt-4b', name:'Mountain Climber', note:'Vücut ağırlığı, tempolu', sets:3, reps:'30 sn'},
+          {id:'cmt-4c', name:'Side Plank', note:'İzometrik, her iki taraf', sets:3, reps:'30 sn/taraf'}
+        ]},
+        {type:'single', exercises:[
+          {id:'cmt-5', name:'Ab Wheel Rollout', note:'Diz üstü, kontrollü', sets:3, reps:'10-12'}
+        ]}
+      ]
+    },
+    {
+      id:'paz', name:'Pazar', title:'Dinlenme', size:'sm', rest:true,
+      blocks:[]
+    }
+  ];
+
+  /* ---------------------------------------------------------
+     2. STATE
+  --------------------------------------------------------- */
+  let activeDay = PROGRAM[0].id;
+  // progress[exerciseId] = [bool, bool, ...] length = sets
+  let progress = {};
+  let storageReady = false;
+
+  function defaultSetsFor(exId){
+    const ex = findExercise(exId);
+    return ex ? new Array(ex.sets).fill(false) : [];
+  }
+
+  function findExercise(exId){
+    for(const day of PROGRAM){
+      for(const block of day.blocks){
+        for(const ex of block.exercises){
+          if(ex.id === exId) return ex;
+        }
+      }
+    }
+    return null;
+  }
+
+  async function loadProgress(){
+    try{
+      const res = await window.storage.get('demir-progress', false);
+      if(res && res.value){
+        progress = JSON.parse(res.value);
+      }
+    }catch(e){
+      progress = {};
+    }
+    storageReady = true;
+  }
+
+  async function saveProgress(){
+    try{
+      await window.storage.set('demir-progress', JSON.stringify(progress), false);
+    }catch(e){ /* silent — session state still works in memory */ }
+  }
+
+  function getSetState(exId){
+    if(!progress[exId]) progress[exId] = defaultSetsFor(exId);
+    return progress[exId];
+  }
+
+  /* ---------------------------------------------------------
+     3. RENDER — barbell / plate selector
+  --------------------------------------------------------- */
+  const plateRow = document.getElementById('plateRow');
+
+  function renderPlates(){
+    plateRow.innerHTML = '';
+    PROGRAM.forEach(day => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'plate-btn' + (day.id === activeDay ? ' active' : '') + (day.rest ? ' rest' : '');
+      btn.dataset.size = day.size;
+      btn.setAttribute('aria-pressed', day.id === activeDay ? 'true' : 'false');
+      btn.setAttribute('aria-label', day.name + ' — ' + day.title);
+      btn.innerHTML = `
+        <div class="plate">${day.rest ? '—' : dayCompletionLabel(day)}</div>
+        <div class="plate-day-label">${day.name.slice(0,3)}</div>
+      `;
+      btn.addEventListener('click', () => {
+        activeDay = day.id;
+        renderPlates();
+        renderDay();
+      });
+      plateRow.appendChild(btn);
+    });
+  }
+
+  function dayCompletionLabel(day){
+    const {done, total} = dayCounts(day);
+    if(total === 0) return '–';
+    return done === total ? '✓' : `${done}/${total}`;
+  }
+
+  function dayCounts(day){
+    let done = 0, total = 0;
+    day.blocks.forEach(block => {
+      block.exercises.forEach(ex => {
+        const state = getSetState(ex.id);
+        total += state.length;
+        done += state.filter(Boolean).length;
+      });
+    });
+    return {done, total};
+  }
+
+  /* ---------------------------------------------------------
+     4. RENDER — day panel
+  --------------------------------------------------------- */
+  const dayPanel = document.getElementById('dayPanel');
+
+  function renderDay(){
+    const day = PROGRAM.find(d => d.id === activeDay);
+    if(!day) return;
+
+    if(day.rest){
+      dayPanel.innerHTML = `
+        <div class="day-head">
+          <h2>${day.title}<span class="muted">${day.name}</span></h2>
+        </div>
+        <div class="rest-note">
+          <b>Toparlanma günü.</b> Kas büyümesi antrenmanda değil, dinlenmede gerçekleşir.
+          İstersen 20-30 dakika hafif yürüyüş veya esneme yap, ama bugün bar'a yüklenme yok.
+          Uyku ve protein alımına odaklan — yarın bar yeniden dolacak.
+        </div>
+      `;
+      return;
+    }
+
+    const {done, total} = dayCounts(day);
+    const pct = total ? Math.round((done/total)*100) : 0;
+
+    let blocksHtml = '';
+    day.blocks.forEach(block => {
+      if(block.type === 'single'){
+        blocksHtml += `<div class="block">${exerciseCardHtml(block.exercises[0])}</div>`;
+      } else {
+        let cards = '';
+        block.exercises.forEach((ex, i) => {
+          cards += exerciseCardHtml(ex);
+          if(i < block.exercises.length - 1){
+            cards += `<div class="no-rest-chip"><span>Dinlenme yok</span><span class="dash"></span></div>`;
+          }
+        });
+        blocksHtml += `
+          <div class="block superset-group">
+            <span class="superset-tag">Süper Set · ${block.exercises.length} hareket</span>
+            <div class="superset-list">${cards}</div>
+          </div>
+        `;
+      }
+    });
+
+    dayPanel.innerHTML = `
+      <div class="day-head">
+        <h2>${day.title}<span class="muted">${day.name}</span></h2>
+        <div class="progress-wrap">
+          <div class="progress-num"><span>SET İLERLEMESİ</span><span>${done}/${total}</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </div>
+      </div>
+      ${blocksHtml}
+    `;
+
+    // wire up set-dot clicks
+    dayPanel.querySelectorAll('.set-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        const exId = dot.dataset.ex;
+        const idx = parseInt(dot.dataset.idx, 10);
+        const state = getSetState(exId);
+        state[idx] = !state[idx];
+        saveProgress();
+        renderDay();
+        renderPlates();
+      });
+    });
+  }
+
+  function exerciseCardHtml(ex){
+    const state = getSetState(ex.id);
+    let dots = '';
+    state.forEach((doneFlag, i) => {
+      dots += `<button type="button" class="set-dot ${doneFlag ? 'done' : ''}" data-ex="${ex.id}" data-idx="${i}" aria-label="${ex.name} set ${i+1} ${doneFlag ? 'tamamlandı' : 'tamamlanmadı'}">${doneFlag ? '✓' : i+1}</button>`;
+    });
+    return `
+      <div class="exercise-card">
+        <div class="ex-top">
+          <div class="ex-name">${ex.name}<small>${ex.note}</small></div>
+          <div class="ex-stat">${ex.sets} SET × ${ex.reps}</div>
+        </div>
+        <div class="set-dots">${dots}</div>
+      </div>
+    `;
+  }
+
+  /* ---------------------------------------------------------
+     5. Footer reset
+  --------------------------------------------------------- */
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    const day = PROGRAM.find(d => d.id === activeDay);
+    if(!day || day.rest) return;
+    day.blocks.forEach(block => {
+      block.exercises.forEach(ex => {
+        progress[ex.id] = defaultSetsFor(ex.id);
+      });
+    });
+    saveProgress();
+    renderDay();
+    renderPlates();
+  });
+
+  /* ---------------------------------------------------------
+     6. Meta: training days count
+  --------------------------------------------------------- */
+  document.getElementById('meta-training-days').textContent =
+    PROGRAM.filter(d => !d.rest).length + '/7';
+
+  /* ---------------------------------------------------------
+     INIT
+  --------------------------------------------------------- */
+  (async function init(){
+    await loadProgress();
+    renderPlates();
+    renderDay();
+  })();
+
+})();
+</script>
+</body>
+</html>
