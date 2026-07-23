@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KPSS Akademi | Kendi KPSS Programını Ücretsiz Oluştur</title>
+<meta name="description" content="KPSS Lisans sınavına özel, tamamen ücretsiz çalışma programı oluşturucu. Üyelik yok, ücret yok.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===================== HEADER / NAVBAR ===================== -->
+<header class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark">KA</span>
+      <span class="logo-text">KPSS Akademi</span>
+    </a>
+
+    <button class="hamburger" id="hamburger" aria-label="Menüyü aç/kapat" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="#" class="nav-link">Ana Sayfa</a>
+      <a href="#nasil-calisir" class="nav-link">Nasıl Çalışır?</a>
+      <a href="#program-olusturucu" class="nav-link">Program Oluştur</a>
+      <a href="#iletisim" class="nav-link">İletişim</a>
+      <span class="nav-badge">%100 Ücretsiz</span>
+    </nav>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">Üyelik yok · Kredi kartı yok · Sonsuza kadar ücretsiz</span>
+    <h1>Kendi KPSS Programını<br><span class="highlight">Kendin Yarat</span></h1>
+    <p class="hero-sub">
+      Çalışma saatini ve derslerini sen belirle, geri kalanını akıllı program oluşturucumuza bırak.
+      Hiçbir ödeme ekranı, hiçbir kilitli içerik yok — sadece sana özel bir haftalık plan.
+    </p>
+    <a href="#program-olusturucu" class="btn btn-primary btn-lg">Hemen Ücretsiz Programını Oluştur</a>
+  </div>
+</section>
+
+<!-- ===================== SINAV SAYACI ===================== -->
+<section class="countdown-section" id="nasil-calisir">
+  <div class="section-inner">
+    <h2 class="section-title">KPSS Lisans Sınavına Kalan Süre</h2>
+    <p class="section-desc">Zaman senin en değerli kaynağın. Sayaç saniye saniye ilerliyor, planını ona göre yap.</p>
+
+    <div class="countdown" id="countdown">
+      <div class="countdown-block">
+        <span class="countdown-number" id="cd-gun">00</span>
+        <span class="countdown-label">Gün</span>
+      </div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-block">
+        <span class="countdown-number" id="cd-saat">00</span>
+        <span class="countdown-label">Saat</span>
+      </div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-block">
+        <span class="countdown-number" id="cd-dakika">00</span>
+        <span class="countdown-label">Dakika</span>
+      </div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-block">
+        <span class="countdown-number" id="cd-saniye">00</span>
+        <span class="countdown-label">Saniye</span>
+      </div>
+    </div>
+    <p class="countdown-note" id="countdownNote"></p>
+  </div>
+</section>
+
+<!-- ===================== PROGRAM OLUŞTURUCU ===================== -->
+<section class="builder-section" id="program-olusturucu">
+  <div class="section-inner">
+    <h2 class="section-title">Kişiselleştirilmiş Program Oluşturucu</h2>
+    <p class="section-desc">İki soruyu cevapla, sana özel haftalık ders programını saniyeler içinde gör.</p>
+
+    <div class="builder-card">
+      <form id="programForm">
+        <!-- SORU 1: Günlük çalışma saati -->
+        <div class="form-group">
+          <label for="calismaSaati">
+            1. Günde kaç saat çalışabilirsin?
+            <span class="saat-deger" id="saatDeger">4 saat</span>
+          </label>
+          <input type="range" id="calismaSaati" name="calismaSaati" min="1" max="12" value="4" step="1" class="slider">
+          <div class="slider-scale">
+            <span>1 sa</span><span>12 sa</span>
+          </div>
+        </div>
+
+        <!-- SORU 2: Ders seçimi -->
+        <div class="form-group">
+          <label>2. Hangi derslere çalışmak istiyorsun?</label>
+          <div class="ders-grid" id="dersGrid">
+            <!-- Checkbox'lar JS tarafından da yönetilebilir ama başlangıç için statik yazıyoruz -->
+            <label class="ders-chip">
+              <input type="checkbox" name="ders" value="Türkçe" checked>
+              <span>Türkçe</span>
+            </label>
+            <label class="ders-chip">
+              <input type="checkbox" name="ders" value="Matematik" checked>
+              <span>Matematik</span>
+            </label>
+            <label class="ders-chip">
+              <input type="checkbox" name="ders" value="Tarih" checked>
+              <span>Tarih</span>
+            </label>
+            <label class="ders-chip">
+              <input type="checkbox" name="ders" value="Coğrafya" checked>
+              <span>Coğrafya</span>
+            </label>
+            <label class="ders-chip">
+              <input type="checkbox" name="ders" value="Vatandaşlık" checked>
+              <span>Vatandaşlık</span>
+            </label>
+          </div>
+          <p class="ders-hint">En az bir ders seçili olmalı. İstemediğin dersin tikini kaldır, süresi otomatik olarak diğer derslere paylaştırılır.</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" id="olusturBtn">Özel Programımı Hazırla</button>
+      </form>
+
+      <!-- ===================== DİNAMİK SONUÇ EKRANI ===================== -->
+      <div class="result-wrap" id="resultWrap" hidden>
+        <div class="result-header">
+          <h3>Haftalık Çalışma Programın</h3>
+          <span class="result-badge" id="resultSaat"></span>
+        </div>
+
+        <div class="table-scroll">
+          <table class="plan-table" id="planTable">
+            <thead>
+              <tr id="planTableHead"></tr>
+            </thead>
+            <tbody id="planTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="plan-note" id="planNote"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BİLGİ KARTLARI ===================== -->
+<section class="tips-section">
+  <div class="section-inner">
+    <h2 class="section-title">Sınav Sürecinde Sana Yardımcı Olacak Öneriler</h2>
+    <p class="section-desc">Ücretli paketlere gerek yok — işine yarayacak taktikleri burada bulabilirsin.</p>
+
+    <div class="tips-grid">
+      <article class="tip-card">
+        <div class="tip-icon">⏱️</div>
+        <h3>Verimli Çalışma Taktikleri</h3>
+        <p>25 dakika odaklan, 5 dakika mola ver (Pomodoro Tekniği). Uzun maraton çalışmalar yerine kısa ve yoğun bloklar, kalıcı öğrenmeyi artırır.</p>
+      </article>
+
+      <article class="tip-card">
+        <div class="tip-icon">🧠</div>
+        <h3>Sınav Stresiyle Başa Çıkma</h3>
+        <p>Sınavdan önceki gece ağır tekrar yapma. Nefes egzersizleri ve düzenli uyku, sınav anındaki performansını doğrudan etkiler.</p>
+      </article>
+
+      <article class="tip-card">
+        <div class="tip-icon">🔁</div>
+        <h3>Etkili Tekrar Teknikleri</h3>
+        <p>Aralıklı tekrar (spaced repetition) kullan: bir konuyu öğrendikten 1 gün, 3 gün ve 7 gün sonra tekrar et. Unutma eğrisini bu şekilde kırarsın.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer" id="iletisim">
+  <div class="section-inner footer-inner">
+    <div class="footer-col">
+      <div class="logo footer-logo">
+        <span class="logo-mark">KA</span>
+        <span class="logo-text">KPSS Akademi</span>
+      </div>
+      <p>Hiçbir ücret, hiçbir üyelik olmadan herkes için açık KPSS çalışma aracı.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>İletişim</h4>
+      <p>info@kpssakademi.ornek</p>
+      <p>Bu proje açık kaynaklıdır ve topluluk katkılarına açıktır.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Bizi Takip Et</h4>
+      <div class="social-links">
+        <a href="#" aria-label="Instagram">Instagram</a>
+        <a href="#" aria-label="YouTube">YouTube</a>
+        <a href="#" aria-label="X / Twitter">X</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; <span id="yil"></span> KPSS Akademi — Açık kaynaklı, %100 ücretsiz bir topluluk projesidir.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
